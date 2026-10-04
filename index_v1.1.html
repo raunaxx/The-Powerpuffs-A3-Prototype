@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STEMMate Namibia - Prototype Lead Workflow</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .contrast-border { border: 2px solid #000; }
+
+    /* High-visibility focus indicator for keyboard users */
+    button:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible,
+    [type="checkbox"]:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 4px #3B82F6, 0 0 0 6px #FFFFFF;
+    }
+
+    /* Screen-reader only utility */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-900 font-sans min-h-screen">
+
+  <!-- TOP APP HEADER -->
+  <header class="bg-blue-900 text-white p-4 shadow-md">
+    <div class="max-w-md mx-auto flex justify-between items-center">
+      <h1 class="font-bold text-lg">STEMMate Namibia</h1>
+      <span class="bg-amber-400 text-black text-xs font-bold px-2 py-1 rounded" id="network-status" role="status" aria-live="polite">
+        ● OFFLINE MODE
+      </span>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-md mx-auto p-4">
+
+    <!-- Live region for form errors / status announcements -->
+    <div id="form-errors" role="alert" aria-live="assertive" class="sr-only"></div>
+
+    <!-- SCREEN 1: FILTER -->
+    <section id="screen-1" class="space-y-4" aria-labelledby="filter-heading">
+      <div class="bg-white p-4 rounded-lg contrast-border shadow-sm">
+        <h2 id="filter-heading" class="text-xl font-bold mb-2">1. Filter by Available Materials</h2>
+        <p class="text-sm text-gray-600 mb-3" id="filter-desc">Select items you currently have available on-site:</p>
+
+        <div class="space-y-2" role="group" aria-describedby="filter-desc">
+          <label class="flex items-center space-x-2 font-medium cursor-pointer">
+            <input type="checkbox" id="mat-bottles" checked class="w-5 h-5 text-blue-600">
+            <span>Plastic Bottles (2L)</span>
+          </label>
+          <label class="flex items-center space-x-2 font-medium cursor-pointer">
+            <input type="checkbox" id="mat-sand" checked class="w-5 h-5 text-blue-600">
+            <span>Sand / Gravel</span>
+          </label>
+          <label class="flex items-center space-x-2 font-medium cursor-pointer">
+            <input type="checkbox" id="mat-wire" class="w-5 h-5 text-blue-600">
+            <span>Copper Wire / Batteries</span>
+          </label>
+        </div>
+
+        <button type="button" onclick="navigateTo('screen-2')"
+                class="mt-4 w-full bg-blue-800 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-900 transition">
+          Find Matching Activities (1 Cached)
+        </button>
+      </div>
+    </section>
+
+    <!-- SCREEN 2: PREVIEW -->
+    <section id="screen-2" class="hidden space-y-4" aria-labelledby="preview-heading">
+      <div class="bg-white p-4 rounded-lg contrast-border shadow-sm">
+        <span class="bg-green-100 text-green-800 text-xs font-bold px-2 py-1 rounded">Upper Primary | 45 Mins</span>
+        <h2 id="preview-heading" class="text-xl font-bold mt-2">DIY Bottle Water Filtration System</h2>
+        <p class="text-sm text-gray-700 mt-1">Build a multi-layer natural water filter using recycled materials.</p>
+
+        <div class="mt-3 bg-amber-50 border-l-4 border-amber-500 p-2 text-xs text-amber-900" role="note">
+          <strong>Safety Alert:</strong> Adult supervision required when cutting plastic bottles.
+        </div>
+
+        <button type="button" onclick="navigateTo('screen-3')"
+                class="mt-4 w-full bg-blue-800 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-900 transition">
+          Start Session Plan with Template
+        </button>
+        <button type="button" onclick="navigateTo('screen-1')"
+                class="mt-2 w-full bg-gray-200 text-gray-800 font-medium py-2 rounded-lg">
+          Back to Search
+        </button>
+      </div>
+    </section>
+
+    <!-- SCREEN 3: PLAN BUILDER -->
+    <section id="screen-3" class="hidden space-y-4" aria-labelledby="plan-heading">
+      <div class="bg-white p-4 rounded-lg contrast-border shadow-sm">
+        <h2 id="plan-heading" class="text-xl font-bold mb-2">3. Session Details & Participant Count</h2>
+
+        <form id="plan-form" onsubmit="event.preventDefault(); completePlan();" novalidate>
+          <div class="mb-3">
+            <label for="location" class="block text-xs font-bold text-gray-700">Location / Community</label>
+            <input type="text" id="location" name="location" value="Rundu Hub - Section B"
+                   class="w-full border p-2 rounded contrast-border mt-1"
+                   required aria-required="true" autocomplete="off">
+          </div>
+
+          <div class="mb-3">
+            <label for="learner-count" class="block text-xs font-bold text-gray-700">Learner Count (Broad Tally Only)</label>
+            <input type="number" id="learner-count" name="learner-count" value="28" min="1"
+                   class="w-full border p-2 rounded contrast-border mt-1"
+                   required aria-required="true" aria-describedby="privacy-note">
+            <p id="privacy-note" class="text-[10px] text-gray-500 mt-1">Privacy Rule: Do not record pupil names or photos.</p>
+          </div>
+
+          <div class="mb-3">
+            <label for="notes" class="block text-xs font-bold text-gray-700">Facilitation Notes</label>
+            <textarea id="notes" name="notes"
+                      class="w-full border p-2 rounded contrast-border mt-1 text-sm h-16">Demonstrate gravel layer first. Group learners in teams of 4.</textarea>
+          </div>
+
+          <div class="text-xs text-gray-500 italic mb-3" id="autosave-indicator" role="status" aria-live="polite">
+            ✓ Auto-saved locally to IndexedDB
+          </div>
+
+          <button type="submit"
+                  class="w-full bg-green-800 text-white font-bold py-3 px-4 rounded-lg hover:bg-green-900 transition">
+            Complete & Queue Plan Offline
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- SCREEN 4: SUCCESS FEEDBACK -->
+    <section id="screen-4" class="hidden space-y-4" aria-labelledby="success-heading">
+      <div class="bg-white p-6 rounded-lg contrast-border shadow-md text-center">
+        <div class="w-16 h-16 bg-green-100 text-green-700 rounded-full flex items-center justify-center mx-auto text-3xl font-bold mb-3" aria-hidden="true">
+          ✓
+        </div>
+        <h2 id="success-heading" class="text-2xl font-bold text-gray-900">Task Completed!</h2>
+        <p class="text-sm text-gray-600 mt-1">Session Plan successfully generated and saved to your device.</p>
+
+        <div class="mt-4 p-3 bg-blue-50 rounded border border-blue-200 text-xs text-left space-y-1" role="status">
+          <div><strong>Plan ID:</strong> PLAN-2026-8801</div>
+          <div><strong>Sync Status:</strong> <span class="bg-amber-200 text-amber-900 px-1 rounded font-bold">Queued Offline</span></div>
+          <div><strong>Data Control:</strong> 0 Personal identities stored.</div>
+        </div>
+
+        <button type="button" onclick="navigateTo('screen-1')"
+                class="mt-5 w-full bg-blue-800 text-white font-bold py-3 px-4 rounded-lg">
+          Start New Planning Task
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    function navigateTo(screenId) {
+      ['screen-1', 'screen-2', 'screen-3', 'screen-4'].forEach(id => {
+        document.getElementById(id).classList.add('hidden');
+      });
+      document.getElementById(screenId).classList.remove('hidden');
+      window.scrollTo(0, 0);
+
+      // Move focus to the heading of the newly shown screen for screen-reader users
+      const heading = document.querySelector('#' + screenId + ' h2');
+      if (heading) {
+        heading.setAttribute('tabindex', '-1');
+        heading.focus();
+      }
+    }
+
+    function completePlan() {
+      const location = document.getElementById('location');
+      const count = document.getElementById('learner-count');
+      const errorRegion = document.getElementById('form-errors');
+
+      // Simple client-side validation with accessible feedback
+      if (!location.value.trim()) {
+        errorRegion.textContent = 'Please enter a location or community name.';
+        location.focus();
+        return;
+      }
+      if (!count.value || Number(count.value) < 1) {
+        errorRegion.textContent = 'Please enter a valid learner count (minimum 1).';
+        count.focus();
+        return;
+      }
+
+      errorRegion.textContent = ''; // clear any previous error
+      navigateTo('screen-4');
+    }
+  </script>
+</body>
+</html>
