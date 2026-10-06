@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5">
+  <title>STEM Facilitator · Session Planner</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app" class="app-container" role="application" aria-label="STEM Facilitator Session Planner"></div>
+
+  <!-- Evaluation / Test Mode panel (testing aid only) -->
+  <div id="evalPanel" class="eval-panel">
+    <button id="evalToggle" class="eval-toggle" aria-expanded="false" aria-controls="evalContent">
+      📋 Eval Mode
+    </button>
+    <div id="evalContent" class="eval-content" hidden>
+      <h4>Evaluation / Test Mode</h4>
+      <p class="small mb-2">Verify each requirement manually by using the app.</p>
+      <ul class="eval-list">
+        <li>FR-01 — Browse &amp; Filter</li>
+        <li>FR-02 — Offline Activity</li>
+        <li>FR-03 — Session Plans</li>
+        <li>FR-04 — Offline Recovery</li>
+        <li>QR-01 — Low-spec friendly</li>
+        <li>QR-02 — Minimal storage/sync</li>
+        <li>AR-01 — Keyboard accessible</li>
+        <li>AR-02 — Text/icon status</li>
+        <li>PR-01 — No pupil data</li>
+        <li>SR-01 — Teacher authentication</li>
+      </ul>
+      <p class="small">No automatic pass/fail is claimed.</p>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
