@@ -1,0 +1,9 @@
+%% State machine: queue operation. UI words from describeState: synced, waiting, failed, conflict
+stateDiagram-v2
+  [*] --> pending: task saved
+  pending --> pending: sync fails, lastError recorded
+  pending --> complete: 200 or duplicate (removed)
+  pending --> conflict: 409
+  conflict --> resolved: user chooses a version
+  complete --> [*]
+  resolved --> [*]

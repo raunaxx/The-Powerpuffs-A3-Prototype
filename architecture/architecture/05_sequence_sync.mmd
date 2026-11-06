@@ -1,0 +1,28 @@
+%% Sequence: save, go offline, sync, conflict (24 Oct build code; re-check against final build)
+sequenceDiagram
+  participant UI as UI
+  participant PS as planService
+  participant Repo as repository
+  participant Q as queue
+  participant S as sync
+  participant API as mockSyncApi
+  UI->>PS: savePlan(task)
+  PS->>PS: validateTaskInput
+  PS->>Repo: saveTask (version + 1, pending)
+  PS->>Q: enqueueTask
+  Note over UI,Q: Offline: task shows as waiting
+  UI->>S: Sync now (online)
+  S->>Q: next pending operation
+  S->>API: send operation with operationId
+  alt 200 or duplicate
+    API-->>S: ok
+    S->>Repo: markTaskSynced
+    S->>Q: completeOperation
+  else 409 stale version
+    API-->>S: conflict
+    S->>Q: markConflict
+  else 400, 422 or 503
+    API-->>S: error
+    S->>Q: record attempt and lastError
+  end
+  UI->>PS: resolve (keep my version or use server version)

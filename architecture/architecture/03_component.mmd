@@ -1,0 +1,44 @@
+%% Component view - purpose: show layers; UI reaches the back end through planService
+%% Source: 24 Oct build plus src/auth.js described by Deon on 6 Nov (auth.js not read by Armindo: confirm)
+flowchart TB
+  subgraph UI ["UI layer"]
+    editor["editor.js"]
+    validation["validation.js"]
+    tasklist["taskList.js"]
+    dialog["dialog.js"]
+    status["status.js"]
+    connection["connection.js"]
+    messages["messages.js"]
+  end
+  subgraph FAC ["Facade"]
+    service["planService.js"]
+  end
+  subgraph AUTH ["Access control (unconfirmed detail)"]
+    auth["auth.js: sign-in, roles, temporary password"]
+  end
+  subgraph BE ["Back-end logic"]
+    repo["repository.js"]
+    queue["queue.js"]
+    sync["sync.js"]
+    exp["export.js"]
+  end
+  subgraph DATA ["Data and server stand-in"]
+    db[("db.js: IndexedDB")]
+    api["mockSyncApi.js"]
+  end
+  editor --> validation
+  editor --> service
+  tasklist --> service
+  connection --> status
+  UI --> auth
+  auth --> db
+  service --> repo
+  service --> queue
+  service --> sync
+  service --> exp
+  repo --> db
+  queue --> db
+  sync --> queue
+  sync --> repo
+  sync --> api
+  exp --> repo

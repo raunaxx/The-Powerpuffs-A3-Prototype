@@ -1,0 +1,18 @@
+%% System context view - purpose: show the system boundary and what crosses it
+%% Legend: solid arrow = confirmed flow, dashed arrow = unconfirmed
+flowchart LR
+  coord["Coordinator"]
+  fac["Facilitator"]
+  admin["Local administrator (unconfirmed)"]
+  app["STEMMate web app"]
+  mock["Mock sync API (in browser)"]
+  host["Static host (Vercel)"]
+  backup[("Backup file (JSON)")]
+  coord -->|"first-run sign-in, adds Facilitators"| app
+  fac -->|"signs in, creates tasks, syncs, backs up"| app
+  admin -.->|"setup, backup, reset"| app
+  host -->|"serves app files"| app
+  app -->|"queued operations"| mock
+  mock -->|"200, 400, 409, 422, 503"| app
+  app -->|"export"| backup
+  backup -->|"restore"| app

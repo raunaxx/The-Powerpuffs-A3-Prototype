@@ -1,0 +1,16 @@
+%% Container view - purpose: show what runs where in the final build (Deon, 6 Nov)
+%% Requirements served: FR-03, FR-04, FR-05, FR-06, SR-01
+flowchart TB
+  subgraph device ["User device: browser"]
+    ui["Front-end (JavaScript, Vite)"]
+    idb[("IndexedDB: tasks, queue, users, roles")]
+    sess["sessionStorage: current username and role (per tab)"]
+    mock["Mock sync API (in memory)"]
+  end
+  host["Static host (Vercel)"]
+  file[("Backup file")]
+  host -->|"app files"| ui
+  ui --> idb
+  ui --> sess
+  ui -->|"operations"| mock
+  ui -->|"export and restore"| file

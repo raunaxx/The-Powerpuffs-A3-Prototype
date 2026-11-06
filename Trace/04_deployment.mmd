@@ -1,0 +1,16 @@
+%% Deployment view - purpose: show where parts run and the trust boundary
+%% Dashed = unconfirmed intended offline distribution
+flowchart LR
+  subgraph boundary ["Trust boundary: the user's device"]
+    subgraph browser ["Browser"]
+      app["STEMMate app"]
+      data[("IndexedDB: tasks, queue, users, roles")]
+      mock["Mock sync API"]
+    end
+  end
+  host["Vercel static host"]
+  usb["USB or local Wi-Fi copy (unconfirmed)"]
+  host -->|"HTTPS: app files only"| app
+  usb -.->|"offline install"| app
+  app --> data
+  app --> mock
